@@ -3,7 +3,7 @@ import time
 
 class Encoder():
     def __init__(self, ChA, ChB, TicksPerRevolution):
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         self.ChA = ChA
         self.ChB = ChB
         GPIO.setup(ChA, GPIO.IN)

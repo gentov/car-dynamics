@@ -6,7 +6,7 @@ class Motor():
     StopPWM = 0
 
     def __init__(self, dirPin, pwmPin,encoderA = None, encoderB =  None, encoderTicksPerRevolution = None):
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         if(encoderA is not None and encoderB is not None and encoderTicksPerRevolution is not None):
             self.encoder = Encoder(encoderA, encoderB, encoderTicksPerRevolution)
         self.dirPin = dirPin

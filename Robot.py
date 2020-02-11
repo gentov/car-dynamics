@@ -6,10 +6,10 @@ from enum import Enum
 # and then initialize a motor (with an encoder),
 # and a ADC in the constructor
 class carParams(Enum):
-    driveMotorPWMPin = 33
-    driveMotorDirPin = 37
-    steeringMotorPWMPin = 29
-    steeringMotorDirPin = 31
+    driveMotorPWMPin = 13
+    driveMotorDirPin = 26
+    steeringMotorPWMPin = 5
+    steeringMotorDirPin = 6
 
 class Car(): 
     def __init__(self, address = None):
