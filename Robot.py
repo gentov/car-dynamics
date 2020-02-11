@@ -25,20 +25,21 @@ class Car():
     def voltageToAngle(self, voltage):
         #takes voltage value and turns it into an angle
         #returns the angle
+        print((45/1.65 * voltage) - 45)
         return (45/1.65 * voltage) - 45
 
     def turnRightRelative(self, degrees):
         currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).value)
         newAngle = currentAngle
         while(abs(newAngle - currentAngle) < degrees):
-            self.steeringMotor.turn(5)
+            self.steeringMotor.turn(1)
             newAngle = self.voltageToAngle(self.adc.AnalogRead(0).value)
 
     def turnLeftRelative(self, degrees):
         currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).value)
         newAngle = currentAngle
         while (abs(newAngle - currentAngle) < degrees):
-            self.steeringMotor.turn(-5)
+            self.steeringMotor.turn(-1)
             newAngle = self.voltageToAngle(self.adc.AnalogRead(0).value)
 
     def turnAbsolute(self, degree):
