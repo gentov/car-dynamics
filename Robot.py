@@ -14,9 +14,9 @@ class carParams(Enum):
 class Car(): 
     def __init__(self, address = None):
         self.adc = ADC()
-        self.steeringMotor = Motor(carParams.steeringMotorDirPin, carParams.steeringMotorPWMPin)
+        self.steeringMotor = Motor(carParams.steeringMotorDirPin.value, carParams.steeringMotorPWMPin.value)
         #put an encoder on this one
-        self.drivingMotor = Motor(carParams.driveMotorDirPin, carParams.driveMotorPWMPin, encoderA=21, encoderB=20)
+        self.drivingMotor = Motor(carParams.driveMotorDirPin.value, carParams.driveMotorPWMPin.value, encoderA=21, encoderB=20)
         pass
 
     def driveForward(self, distance):
