@@ -29,6 +29,7 @@ class Car():
         return (45/1.65 * voltage) - 45
 
     def turnRightRelative(self, degrees):
+        print("Turning Right")
         currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         newAngle = currentAngle
         while(abs(abs(newAngle) - abs(currentAngle)) < degrees):
@@ -39,6 +40,7 @@ class Car():
         print("Turned Right")
 
     def turnLeftRelative(self, degrees):
+        print("Turning Left")
         currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         newAngle = currentAngle
         while (abs(abs(newAngle) - abs(currentAngle)) < degrees):
@@ -62,5 +64,5 @@ class Car():
         print("Went to angle:", self.voltageToAngle(self.adc.AnalogRead(0).voltage))
 
 c = Car()
-while(1):
-    c.voltageToAngle(c.adc.AnalogRead(0).voltage)
+c.turnRightRelative(10)
+c.turnLeftRelative(10)
