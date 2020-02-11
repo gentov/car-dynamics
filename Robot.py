@@ -29,21 +29,21 @@ class Car():
         return (45/1.65 * voltage) - 45
 
     def turnRightRelative(self, degrees):
-        currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).value)
+        currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         newAngle = currentAngle
         while(abs(newAngle - currentAngle) < degrees):
             self.steeringMotor.turn(1)
-            newAngle = self.voltageToAngle(self.adc.AnalogRead(0).value)
+            newAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
 
     def turnLeftRelative(self, degrees):
-        currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).value)
+        currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         newAngle = currentAngle
         while (abs(newAngle - currentAngle) < degrees):
             self.steeringMotor.turn(-1)
-            newAngle = self.voltageToAngle(self.adc.AnalogRead(0).value)
+            newAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
 
     def turnAbsolute(self, degree):
-        currentAngle =  self.voltageToAngle(self.adc.AnalogRead(0).value)
+        currentAngle =  self.voltageToAngle(self.adc.AnalogRead(0).voltage)
 
         #Angle is to the right
         if degree < currentAngle:
@@ -53,7 +53,7 @@ class Car():
         elif degree > currentAngle:
             self.turnLeftRelative(degree - currentAngle)
 
-        print("Went to angle:", self.voltageToAngle(self.adc.AnalogRead(0).value))
+        print("Went to angle:", self.voltageToAngle(self.adc.AnalogRead(0).voltage))
 
 c = Car()
 c.turnRightRelative(10)
