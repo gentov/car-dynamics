@@ -36,6 +36,5 @@ class Motor():
             if speed>100:
                 speed = 100
             self.pwm.start(abs(speed))
-            if(self.verbose == True):
-                print("Speed:", speed)
+            print("Speed:", speed)
             time.sleep(.002)
