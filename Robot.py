@@ -33,7 +33,7 @@ class Car():
         currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         newAngle = currentAngle
         while(abs(abs(newAngle) - abs(currentAngle)) < degrees):
-            self.steeringMotor.turn(-1)
+            self.steeringMotor.turn(-2)
             newAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         self.steeringMotor.turn(0)
         print("Turned Right")
@@ -43,7 +43,7 @@ class Car():
         currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         newAngle = currentAngle
         while (abs(abs(newAngle) - abs(currentAngle)) < degrees):
-            self.steeringMotor.turn(1)
+            self.steeringMotor.turn(2)
             newAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         self.steeringMotor.turn(0)
         print("Turned Left")
@@ -62,5 +62,7 @@ class Car():
         print("Went to angle:", self.voltageToAngle(self.adc.AnalogRead(0).voltage))
 
 c = Car()
-c.turnRightRelative(10)
-c.turnLeftRelative(10)
+while(1):
+    print(c.adc.AnalogRead(0).voltage)
+# c.turnRightRelative(10)
+# c.turnLeftRelative(10)
