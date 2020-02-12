@@ -3,9 +3,8 @@ import time
 from Encoder import *
 class Motor():
     Frequency = 250
-    StopPWM = 0
 
-    def __init__(self, dirPin, pwmPin,encoderA = None, encoderB =  None, encoderTicksPerRevolution = None):
+    def __init__(self, dirPin, pwmPin, encoderA = None, encoderB =  None, encoderTicksPerRevolution = None):
         GPIO.setmode(GPIO.BCM)
         if(encoderA is not None and encoderB is not None and encoderTicksPerRevolution is not None):
             self.encoder = Encoder(encoderA, encoderB, encoderTicksPerRevolution)
@@ -14,7 +13,7 @@ class Motor():
         GPIO.setup(self.dirPin, GPIO.OUT)
         GPIO.setup(self.PWMPin, GPIO.OUT)
         self.pwm = GPIO.PWM(self.PWMPin, self.Frequency)
-        self.speed = self.StopPWM
+        self.speed = 0
         self.verbose = False
         self.counterclockwise = 1
         self.clockwise = 0
@@ -22,20 +21,21 @@ class Motor():
 
     def setDirection(self, dir):
         if(dir == 1):
-            GPIO.output(self.dirPin, self.counterclockwise)
+            GPIO.output(self.dirPin, GPIO.HIGH)
         else:
-            GPIO.output(self.dirPin, self.clockwise)
+            GPIO.output(self.dirPin, GPIO.LOW)
+
     #As a percentage 0 - 100
     def turn(self, speed):
         if(speed == 0):
             time.sleep(.002)
-            self.pwm.start(self.StopPWM)
+            self.pwm.stop()
             time.sleep(.002)
         else:
             time.sleep(.002)
             if speed>100:
                 speed = 100
-            self.pwm.start(abs(speed))
+            self.pwm.start(speed)
             if(self.verbose == True):
                 print("Speed:", speed)
             time.sleep(.002)
