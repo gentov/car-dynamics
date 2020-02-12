@@ -66,6 +66,6 @@ class Car():
 c = Car()
 #while(1):
     #print(c.voltageToAngle(c.adc.AnalogRead(0).voltage))
-c.turnRightRelative(10)
-time.sleep(1.5)
+# c.turnRightRelative(10)
+# time.sleep(1.5)
 c.turnLeftRelative(10)

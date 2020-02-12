@@ -28,27 +28,14 @@ class Motor():
     #As a percentage 0 - 100
     def turn(self, speed):
         if(speed == 0):
-            #GPIO.output(self.dirPin, self.counterclockwise)
             time.sleep(.002)
             self.pwm.start(self.StopPWM)
             time.sleep(.002)
-
-        elif speed>0.0:
+        else:
             time.sleep(.002)
-            #GPIO.output(self.dirPin, self.counterclockwise)
             if speed>100:
-                speed = 100
-            self.pwm.start(speed)
-            if(self.verbose == True):
-                print("Speed:", speed)
-            time.sleep(.002)
-
-        elif speed<0.0:
-            time.sleep(.002)
-            #GPIO.output(self.dirPin, self.clockwise)
-            if(abs(speed) > 100):
                 speed = 100
             self.pwm.start(abs(speed))
             if(self.verbose == True):
-                print("Speed: ",speed)
+                print("Speed:", speed)
             time.sleep(.002)
