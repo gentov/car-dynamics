@@ -32,6 +32,7 @@ class Motor():
             self.pwm.start(self.StopPWM)
             time.sleep(.002)
         else:
+            print("HERE")
             time.sleep(.002)
             if speed>100:
                 speed = 100
