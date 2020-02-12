@@ -38,7 +38,7 @@ class Encoder():
         self.previousTime = currentTime
         self.lastTickA = True
         self.lastTickB = False
-
+        print("here")
     def TickCountB(self, data):
 
         if(self.lastTickB == True):
