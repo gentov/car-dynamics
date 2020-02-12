@@ -29,7 +29,7 @@ class Motor():
 
         elif speed>0.0:
             time.sleep(.002)
-            GPIO.output(self.dirPin, self.counterclockwise)
+            #GPIO.output(self.dirPin, self.counterclockwise)
             if speed>100:
                 speed = 100
             self.pwm.start(speed)
@@ -39,7 +39,7 @@ class Motor():
 
         elif speed<0.0:
             time.sleep(.002)
-            GPIO.output(self.dirPin, self.clockwise)
+            #GPIO.output(self.dirPin, self.clockwise)
             if(abs(speed) > 100):
                 speed = 100
             self.pwm.start(abs(speed))
