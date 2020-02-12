@@ -6,10 +6,10 @@ from enum import Enum
 # and then initialize a motor (with an encoder),
 # and a ADC in the constructor
 class carParams(Enum):
-    driveMotorPWMPin = 5
-    driveMotorDirPin = 6
-    steeringMotorPWMPin = 13
-    steeringMotorDirPin = 26
+    driveMotorPWMPin = 6
+    driveMotorDirPin = 5
+    steeringMotorPWMPin = 26
+    steeringMotorDirPin = 13
 
 class Car(): 
     def __init__(self, address = None):
@@ -30,11 +30,11 @@ class Car():
 
     def turnRightRelative(self, degrees):
         print("Turning Right")
-        self.steeringMotor.setDirection(1)
+        self.steeringMotor.setDirection(0)
         currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         newAngle = currentAngle
         while(newAngle > (currentAngle - degrees)):
-            self.steeringMotor.turn(3)
+            self.steeringMotor.turn(8)
             newAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         self.steeringMotor.turn(0)
         print("Turned Right")
@@ -42,11 +42,11 @@ class Car():
 
     def turnLeftRelative(self, degrees):
         print("Turning Left")
-        self.steeringMotor.setDirection(0)
+        self.steeringMotor.setDirection(1)
         currentAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         newAngle = currentAngle
         while (newAngle < (degrees + currentAngle)):
-            self.steeringMotor.turn(10)
+            self.steeringMotor.turn(8)
             newAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         self.steeringMotor.turn(0)
         time.sleep(1)
@@ -70,5 +70,5 @@ c = Car()
     #print(c.voltageToAngle(c.adc.AnalogRead(0).voltage))
 # c.turnRightRelative(10)
 # time.sleep(1.5)
-c.turnLeftRelative(10)
-c.turnRightRelative(10)
+c.turnLeftRelative(45)
+c.turnRightRelative(45)
