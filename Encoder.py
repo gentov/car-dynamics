@@ -38,9 +38,8 @@ class Encoder():
         self.previousTime = currentTime
         self.lastTickA = True
         self.lastTickB = False
-        print("here")
+        print(self.velocity)
     def TickCountB(self, data):
-
         if(self.lastTickB == True):
             self.ticks += 0
         elif(GPIO.input(self.ChA)):
