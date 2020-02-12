@@ -11,7 +11,7 @@ class Encoder():
         self.dir = 0
         GPIO.add_event_detect(self.ChA, GPIO.RISING, callback=self.TickCountA)
         GPIO.add_event_detect(self.ChB, GPIO.RISING, callback=self.TickCountB)
-        self.TicksToMeters = .239/float(TicksPerRevolution) #3" diameter wheels
+        self.TicksToMeters = float(.239)/float(TicksPerRevolution) #3" diameter wheels
         self.ticks = 0
         self.meters = 0
         self.previousTime = time.time()
