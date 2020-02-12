@@ -62,7 +62,7 @@ class Car():
         print("Went to angle:", self.voltageToAngle(self.adc.AnalogRead(0).voltage))
 
 c = Car()
-while(1):
-    print(c.voltageToAngle(c.adc.AnalogRead(0).voltage))
-# c.turnRightRelative(10)
-# c.turnLeftRelative(10)
+#while(1):
+    #print(c.voltageToAngle(c.adc.AnalogRead(0).voltage))
+c.turnRightRelative(10)
+c.turnLeftRelative(10)
