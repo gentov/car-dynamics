@@ -19,6 +19,12 @@ class Motor():
         self.counterclockwise = 1
         self.clockwise = 0
 
+
+    def setDirection(self, dir):
+        if(dir == 1):
+            GPIO.output(self.dirPin, self.counterclockwise)
+        else:
+            GPIO.output(self.dirPin, self.clockwise)
     #As a percentage 0 - 100
     def turn(self, speed):
         if(speed == 0):
