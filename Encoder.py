@@ -11,9 +11,9 @@ class Encoder():
         self.dir = 0
         GPIO.add_event_detect(self.ChA, GPIO.RISING, callback=self.TickCountA)
         GPIO.add_event_detect(self.ChB, GPIO.RISING, callback=self.TickCountB)
-        self.TicksToAngleRadians = 6.283/float(TicksPerRevolution)
+        self.TicksToMeters = .239/float(TicksPerRevolution) #3" diameter wheels
         self.ticks = 0
-        self.Angle = 0
+        self.meters = 0
         self.previousTime = time.time()
         self.velocity = 0.0
         self.lastTickA = False
@@ -31,10 +31,10 @@ class Encoder():
             self.ticks += 1
 
         if(self.dir==0):
-            self.velocity = self.TicksToAngleRadians/(currentTime-self.previousTime)
+            self.velocity = self.TicksToMeters/(currentTime-self.previousTime)
         else:
-            self.velocity = -self.TicksToAngleRadians / (currentTime - self.previousTime)
-        self.Angle = float(self.ticks)*self.TicksToAngleRadians
+            self.velocity = -self.TicksToMeters / (currentTime - self.previousTime)
+        self.meters = float(self.ticks)*self.TicksToMeters
         self.previousTime = currentTime
         self.lastTickA = True
         self.lastTickB = False
@@ -51,6 +51,6 @@ class Encoder():
             self.ticks -= 1
 
 
-        self.Angle = float(self.ticks)*self.TicksToAngleRadians
+        self.meters = float(self.ticks)*self.TicksToMeters
         self.lastTickA = False
         self.lastTickB = True
