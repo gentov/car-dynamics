@@ -55,11 +55,11 @@ class Car():
 
         #Angle is to the right
         if degree < currentAngle:
-            self.turnLeftRelative(currentAngle - degree)
+            self.turnLeftRelative(abs(currentAngle - degree))
 
         #angle is to the left
         elif degree > currentAngle:
-            self.turnRightRelative(degree - currentAngle)
+            self.turnRightRelative(abs(degree - currentAngle))
 
         print("Went to angle:", self.voltageToAngle(self.adc.AnalogRead(0).voltage))
 
