@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 import sys
 
@@ -9,7 +9,7 @@ from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QApplication, QSizePolicy
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QThread, pyqtSignal
-designerFile = "/home/nick/catkin_ws/src/501Project/car-dynamics/CarApp.ui"
+designerFile = "/home/nick/catkin_ws/src/501Project/carpackage/src/car-dynamics/CarApp.ui"
 class CarApp(QtWidgets.QMainWindow):
     def __init__(self):
         super(CarApp, self).__init__()

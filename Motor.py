@@ -6,8 +6,10 @@ class Motor():
 
     def __init__(self, dirPin, pwmPin, encoderA = None, encoderB =  None, encoderTicksPerRevolution = None):
         GPIO.setmode(GPIO.BCM)
+        self.motorFunction = 0
         if(encoderA is not None and encoderB is not None and encoderTicksPerRevolution is not None):
             self.encoder = Encoder(encoderA, encoderB, encoderTicksPerRevolution)
+            self.motorFunction = 1
         self.dirPin = dirPin
         self.PWMPin = pwmPin
         GPIO.setup(self.dirPin, GPIO.OUT)
@@ -36,5 +38,6 @@ class Motor():
             if speed>100:
                 speed = 100
             self.pwm.start(speed)
-            print("Speed:", self.encoder.velocity, "M/s")
+            if self.motorFunction == 1:
+                print("Speed:", self.encoder.velocity, "M/s")
             time.sleep(.002)
