@@ -11,8 +11,12 @@ class CarController:
     def keyboardCallback(self, data):
         if data.data == 0:
             print("Pressed Up")
+            self.car.drivingMotor.setDirection(0)
+            self.car.drivingMotor.turn(100)
         elif data.data == 1:
             print("Pressed Down")
+            self.car.drivingMotor.setDirection(1)
+            self.car.drivingMotor.turn(100)
         elif data.data == 2:
             print("Pressed Left")
             self.car.turnAbsolute(44)
@@ -20,8 +24,18 @@ class CarController:
         elif data.data == 3:
             print("Pressed Right")
             self.car.turnAbsolute(-44)
+
+        elif data.data == 4:
+            print("Stop")
+            self.car.drivingMotor.turn(0)
+        elif data.data == 5:
+            self.car.turnAbsolute(0)
+        elif data.data == 6:
+            print("Velocity: ", self.car.drivingMotor.encoder.velocity)
+            print("Ticks: ", self.car.drivingMotor.encoder.ticks)
         else:
             print(data)
+
 
 if __name__ == '__main__':
     rospy.init_node('Car_Controller')

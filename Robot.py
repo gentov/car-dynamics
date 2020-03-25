@@ -6,8 +6,8 @@ from enum import Enum
 # and then initialize a motor (with an encoder),
 # and a ADC in the constructor
 class carParams(Enum):
-    driveMotorPWMPin = 6
-    driveMotorDirPin = 5
+    driveMotorPWMPin = 16
+    driveMotorDirPin = 12
     steeringMotorPWMPin = 26
     steeringMotorDirPin = 13
 
@@ -16,7 +16,7 @@ class Car():
         self.adc = ADC()
         self.steeringMotor = Motor(carParams.steeringMotorDirPin.value, carParams.steeringMotorPWMPin.value)
         #put an encoder on this one
-        self.drivingMotor = Motor(carParams.driveMotorDirPin.value, carParams.driveMotorPWMPin.value, encoderA=21, encoderB=20)
+        self.drivingMotor = Motor(carParams.driveMotorDirPin.value, carParams.driveMotorPWMPin.value, encoderA=21, encoderB=20, encoderTicksPerRevolution=100)
 
 
     def driveForward(self, distance):

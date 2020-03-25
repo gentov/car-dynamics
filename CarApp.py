@@ -30,6 +30,12 @@ class CarApp(QtWidgets.QMainWindow):
         elif event.key() == Qt.Key_Right:
             print("Pressed Right")
             self.KeyboardMessage.publish(3)
+        elif event.key() == Qt.Key_Space:
+            self.KeyboardMessage.publish(4)
+        elif event.key() == Qt.Key_B:
+            self.KeyboardMessage.publish(5)
+        elif event.key() == Qt.Key_S:
+            self.KeyboardMessage.publish(6)
 
 if __name__ == '__main__':
     rospy.init_node('Car_Control')
