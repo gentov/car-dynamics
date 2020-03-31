@@ -6,8 +6,8 @@ from enum import Enum
 # and then initialize a motor (with an encoder),
 # and a ADC in the constructor
 class carParams(Enum):
-    driveMotorPWMPin = 6
-    driveMotorDirPin = 5
+    driveMotorPWMPin = 16
+    driveMotorDirPin = 12
     steeringMotorPWMPin = 26
     steeringMotorDirPin = 13
 
@@ -16,11 +16,11 @@ class Car():
         self.adc = ADC()
         self.steeringMotor = Motor(carParams.steeringMotorDirPin.value, carParams.steeringMotorPWMPin.value)
         #put an encoder on this one
-        self.drivingMotor = Motor(carParams.driveMotorDirPin.value, carParams.driveMotorPWMPin.value, encoderA=21, encoderB=20)
-        pass
+        self.drivingMotor = Motor(carParams.driveMotorDirPin.value, carParams.driveMotorPWMPin.value, encoderA=21, encoderB=20, encoderTicksPerRevolution=100)
+
 
     def driveForward(self, distance):
-	    pass
+        pass
 
     def voltageToAngle(self, voltage):
         #takes voltage value and turns it into an angle
@@ -63,11 +63,13 @@ class Car():
 
         print("Went to angle:", self.voltageToAngle(self.adc.AnalogRead(0).voltage))
 
-c = Car()
-#while(1):
-    #print(c.voltageToAngle(c.adc.AnalogRead(0).voltage))
-# c.turnRightRelative(10)
-# time.sleep(1.5)
-# c.turnLeftRelative(45)
-# c.turnRightRelative(45)
-c.turnAbsolute(0)
+if __name__ == '__main__':
+    c = Car()
+    c.drivingMotor.turn(100)
+    #while(1):
+        #print(c.voltageToAngle(c.adc.AnalogRead(0).voltage))
+    # c.turnRightRelative(10)
+    # time.sleep(1.5)
+    # c.turnLeftRelative(45)
+    # c.turnRightRelative(45)
+    #c.turnAbsolute(0)
