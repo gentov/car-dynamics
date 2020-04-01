@@ -2,7 +2,7 @@
 import rospy
 from std_msgs.msg import Float64
 from Robot import *
-from carpackage.srv import VandWService
+from carpackage.srv import VandWService, VandWServiceResponse
 import math
 
 class CarController:
@@ -12,33 +12,37 @@ class CarController:
         self.car = Car()
         self.car.turnAbsolute(0)
         self.carmode = 0 #0 is for teleop 1 is for autonomous
+        self.carLength = .212
+        self.carWidth = .224
         serviceVandW = rospy.Service("VandW", VandWService, self.updateVandW)
         
     def ChangeMode(self, data):
         self.carmode = data.data
 
     def updateVandW(self, data):
+        measuredV = 0
+        measuredW = 0
+        timeElapsed = 0
         if self.carmode == 1:
-            pass
-        # Calculate steering angle from W
-        self.car.DesiredSteeringAngle = math.atan(W*carLength/V)
-       
-        if(V < 0):
-            self.car.drivingMotor.setDirection(1)
-        elif(V > 0):
-            self.car.drivingMotor.setDirection(0)
+            # Calculate steering angle from W, thread actually moves it
+            self.car.DesiredSteeringAngle = math.atan(data.W*self.carLength/data.V)
         
-        self.car.drivingMotor.turn(self.velocityToPWM(V))
-        
-        # Set drive motor to V
-        #waits some amount of time
-        #returns measured V and W
-        measuredV = self.car.getLinearVelocity()
-        measuredW = self.car.getAngularVelocity()
-        timeElapsed = 0 #add function
+            if(data.V < 0):
+                self.car.drivingMotor.setDirection(1)
+            elif(data.V > 0):
+                self.car.drivingMotor.setDirection(0)
+            
+            self.car.drivingMotor.turn(self.velocityToPWM(V))
+            
+            # Set drive motor to V
+            #waits some amount of time
+            #returns measured V and W
+            measuredV = self.car.getLinearVelocity()
+            measuredW = self.car.getAngularVelocity()
+            timeElapsed = 0 #add function
         return VandWServiceResponse(measuredV, measuredW, timeElapsed)
 
-    def velocityToPWM(self, velocity)
+    def velocityToPWM(self, velocity):
         maxPWM = 100
         velocityToPWMRatio = maxPWM/self.car.maxSpeed
         return velocity * velocityToPWMRatio
