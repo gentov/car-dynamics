@@ -1,0 +1,6 @@
+Put turning in seperatethread
+Make gui have buttons to generate trajectory
+    gui will have options to add circles and straight lines
+Add generate trajectory function to GUI
+Create Input/Output controller
+Add to robot car client

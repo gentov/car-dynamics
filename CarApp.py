@@ -15,8 +15,17 @@ class CarApp(QtWidgets.QMainWindow):
         super(CarApp, self).__init__()
         self.ui = uic.loadUi(designerFile, self)
         self.KeyboardMessage = rospy.Publisher('/CarKeyboard', Float64, queue_size=1)
+        self.RobotMode = rospy.Publisher('/CarMode', Float64, queue_size=1)
 
+        ## Custom Trajectory message: a list containing x,y,theta
+        self.TrajectoryMessage = rospy.Publisher('/Trajectory', TrajectoryMSG, queue_size=1)
+        
+    def generateTrajectory():
+        # A button in a Qt window will have this method as its callback
+        # This will publish the trajectory message, and the InputOutController will subscribe to this message type
+        pass
 
+        #overriding from Qt library
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
             print("Pressed Up")
