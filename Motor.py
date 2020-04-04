@@ -26,6 +26,8 @@ class Motor():
             GPIO.output(self.dirPin, GPIO.HIGH)
         else:
             GPIO.output(self.dirPin, GPIO.LOW)
+        if self.motorFunction == 1:
+            self.encoder.dir = dir
 
     #As a percentage 0 - 100
     def turn(self, speed):

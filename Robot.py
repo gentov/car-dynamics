@@ -17,7 +17,7 @@ class Car():
         self.adc = ADC()
         self.steeringMotor = Motor(carParams.steeringMotorDirPin.value, carParams.steeringMotorPWMPin.value)
         #put an encoder on this one
-        self.drivingMotor = Motor(carParams.driveMotorDirPin.value, carParams.driveMotorPWMPin.value, encoderA=21, encoderB=20, encoderTicksPerRevolution=100)
+        self.drivingMotor = Motor(carParams.driveMotorDirPin.value, carParams.driveMotorPWMPin.value, encoderA=23, encoderB=24, encoderTicksPerRevolution=100)
         self.maxSpeed = 100 # mm/s (needs updating)
         self.DesiredSteeringAngle = 0
         self.AngleTolerance = 0.05

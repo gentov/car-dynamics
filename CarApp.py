@@ -8,6 +8,7 @@ import numpy as np
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QApplication, QSizePolicy
 from PyQt5.QtCore import Qt
+from carpackage.msg import TrajectoryMSG
 from PyQt5.QtCore import QThread, pyqtSignal
 designerFile = "/home/nick/catkin_ws/src/501Project/carpackage/src/car-dynamics/CarApp.ui"
 class CarApp(QtWidgets.QMainWindow):
