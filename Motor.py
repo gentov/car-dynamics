@@ -41,6 +41,5 @@ class Motor():
                 speed = 100
             self.pwm.start(speed)
             if self.motorFunction == 1:
-                print("Speed:", self.encoder.velocity, "M/s")
                 print("ticks: ", self.encoder.ticks)
             time.sleep(.002)

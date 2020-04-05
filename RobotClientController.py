@@ -10,7 +10,6 @@ class CarController:
         self.KeyboardMessage = rospy.Subscriber('/CarKeyboard', Float64, self.keyboardCallback, queue_size=1)
         self.RobotMode = rospy.Subscriber('/CarMode', Float64, self.ChangeMode, queue_size=1)
         self.car = Car()
-        self.car.turnAbsolute(0)
         self.carmode = 0 #0 is for teleop 1 is for autonomous
         self.carLength = .212
         self.carWidth = .224
@@ -32,7 +31,7 @@ class CarController:
             elif(data.V > 0):
                 self.car.drivingMotor.setDirection(0)
             
-            self.car.drivingMotor.turn(self.velocityToPWM(V))
+            self.car.drivingMotor.turn(self.velocityToPWM(data.V))
             
             # Set drive motor to V
             #waits some amount of time
@@ -71,7 +70,7 @@ class CarController:
             elif data.data == 5:
                 self.car.DesiredSteeringAngle = 0
             elif data.data == 6:
-                print("Velocity: ", self.car.drivingMotor.encoder.velocity)
+                print("Velocity: ", self.car.LinearVelocity)
                 print("Ticks: ", self.car.drivingMotor.encoder.ticks)
             else:
                 print(data)

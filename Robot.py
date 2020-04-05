@@ -3,6 +3,8 @@ from Motor import *
 from Encoder import *
 from enum import Enum
 import time
+import threading
+import math
 #TODO: Have an enumeration for car pins,
 # and then initialize a motor (with an encoder),
 # and a ADC in the constructor
@@ -20,11 +22,13 @@ class Car():
         self.drivingMotor = Motor(carParams.driveMotorDirPin.value, carParams.driveMotorPWMPin.value, encoderA=23, encoderB=24, encoderTicksPerRevolution=100)
         self.maxSpeed = 100 # mm/s (needs updating)
         self.DesiredSteeringAngle = 0
-        self.AngleTolerance = 0.05
+        self.AngleTolerance = 0.1
         self.SteeringThread = threading.Thread(target=self.turnToDesiredAngle)
         
-        self.steeringSpeed = 20
-        self.CalcVelocityThread = threading.Thread(target = self.getLinearVelocity)
+        self.steeringSpeed = 12
+        #self.CalcVelocityThread = threading.Thread(target = self.getLinearVelocity)
+        self.steeringDirection = 0
+        self.steeringMoving = False
        
         self.steeringAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
         self.carLength = .212
@@ -34,18 +38,18 @@ class Car():
         self.TimeOfNextCheck = 0
         self.LinearVelocity = 0
         self.VelCheckFrequency = 10 #10 times per second
-        self.TicksToMM = 100 #needs updating
+        self.TicksToMM = 1.180 #needs updating
         self.SteeringThread.start()
         self.CalcVelocityThread.start()
         
-    def getLinearVelocity():
+    def getLinearVelocity(self):
         while(True):
             if self.TimeOfNextCheck<time.time():
-                currentTicks = self.encoder.ticks
+                currentTicks = self.drivingMotor.encoder.ticks
                 changeInTicks = currentTicks-self.LastEncoderTicks
                 currentTime = time.time()
                 changeInTime = currentTime-self.TimeOfLastCheck
-                self.LinearVelocity = changeInTicks/changeInTime*self.TicksToMM
+                self.LinearVelocity = changeInTicks/changeInTime/self.TicksToMM
                 self.LastEncoderTicks = currentTicks
                 self.TimeOfLastCheck = currentTime
                 self.TimeOfNextCheck = currentTime+1/self.VelCheckFrequency    
@@ -53,8 +57,9 @@ class Car():
     def voltageToAngle(self, voltage):
         #takes voltage value and turns it into an angle
         #returns the angle
-        print((45/1.65 * voltage) - 45)
-        return (45/1.65 * voltage) - 45
+        angle = (45/1.65 * voltage) - 45
+        print(angle)
+        return angle
 
     def turnRightRelative(self, degrees):
         print("Turning Right")
@@ -91,21 +96,30 @@ class Car():
 
         print("Went to angle:", self.voltageToAngle(self.adc.AnalogRead(0).voltage))
 
-    def turnToDesiredAngle():
+    def turnToDesiredAngle(self):
         while(True):
-            self.steeringAngle =  self.voltageToAngle(self.adc.AnalogRead(0).voltage)
+            self.steeringAngle = self.voltageToAngle(self.adc.AnalogRead(0).voltage)
             if self.DesiredSteeringAngle < (self.steeringAngle - self.AngleTolerance):
-                self.steeringMotor.setDirection(0)
-                self.steeringMotor.turn(self.steeringSpeed)
+                if self.steeringDirection!=0:
+                    self.steeringMotor.setDirection(0)
+                    self.steeringDirection = 0
+
+                if self.steeringMoving == False:
+                    self.steeringMotor.turn(self.steeringSpeed)
+                    self.steeringMoving = True
             elif self.DesiredSteeringAngle > (self.steeringAngle + self.AngleTolerance):
-                self.steeringMotor.setDirection(1)
-                self.steeringMotor.turn(self.steeringSpeed)
+                if self.steeringDirection!=1:
+                    self.steeringMotor.setDirection(1)
+                    self.steeringDirection = 1
+                if self.steeringMoving == False:
+                    self.steeringMotor.turn(self.steeringSpeed)
+                    self.steeringMoving = True
             else:
                 self.steeringMotor.turn(0)
+                self.steeringMoving = False
 
-    def getAngularVelocity():
-        self.AngularVelocity = (self.getLinearVelocity*math.tan(self.steeringAngle))/self.carLength; #ThetaDot in radians
-        pass
+    def getAngularVelocity(self):
+        self.AngularVelocity = (self.LinearVelocity*math.tan(self.steeringAngle))/self.carLength #ThetaDot in radians
 
 
 
