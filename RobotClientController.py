@@ -27,22 +27,20 @@ class CarController:
             self.car.DesiredSteeringAngle = math.atan(data.W*self.carLength/data.V)
         
             if(data.V < 0):
-                self.car.drivingMotor.setDirection(1)
+                self.car.setMotor(self.velocityToPWM(data.V), 1)
             elif(data.V > 0):
-                self.car.drivingMotor.setDirection(0)
-            
-            self.car.drivingMotor.turn(self.velocityToPWM(data.V))
-            
+                self.car.setMotor(self.velocityToPWM(data.V), 0)
+
             # Set drive motor to V
             #waits some amount of time
             #returns measured V and W
-            measuredV = self.car.getLinearVelocity()
-            measuredW = self.car.getAngularVelocity()
+            measuredV = self.car.LinearVelocity
+            measuredW = self.car.AngularVelocity
             timeElapsed = 0 #add function
         return VandWServiceResponse(measuredV, measuredW, timeElapsed)
 
     def velocityToPWM(self, velocity):
-        maxPWM = 100
+        maxPWM = 255
         velocityToPWMRatio = maxPWM/self.car.maxSpeed
         return velocity * velocityToPWMRatio
     
@@ -50,28 +48,29 @@ class CarController:
         if self.carmode == 0:
             if data.data == 0:
                 print("Pressed Up")
-                self.car.drivingMotor.setDirection(0)
-                self.car.drivingMotor.turn(100)
+                self.car.setMotor(255, 0)
+
             elif data.data == 1:
                 print("Pressed Down")
-                self.car.drivingMotor.setDirection(1)
-                self.car.drivingMotor.turn(100)
+                self.car.setMotor(255, 1)
+
             elif data.data == 2:
                 print("Pressed Left")
-                self.car.DesiredSteeringAngle = 44
+                self.car.turnToDesiredAngle(-35)
+
 
             elif data.data == 3:
                 print("Pressed Right")
-                self.car.DesiredSteeringAngle = -44
+                self.car.turnToDesiredAngle(35)
 
             elif data.data == 4:
                 print("Stop")
-                self.car.drivingMotor.turn(0)
+                self.car.setMotor(0, 1)
             elif data.data == 5:
-                self.car.DesiredSteeringAngle = 0
+                self.car.turnToDesiredAngle(0)
             elif data.data == 6:
                 print("Velocity: ", self.car.LinearVelocity)
-                print("Ticks: ", self.car.drivingMotor.encoder.ticks)
+                print("Ticks: ", self.car.ticks)
             else:
                 print(data)
 
