@@ -64,6 +64,7 @@ class Car():
         msg = [int(temp[0]), int(temp[1])]
         self.sendMessage(1, msg)
 
+
     
     def setMotor(self, speed, direction):
         msg = [int(speed), direction]

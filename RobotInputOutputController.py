@@ -42,11 +42,11 @@ def __init__(self):
     # runController will take in a time, ceiling it, and then use that time to access the desired pose
     self.trajectoryWaypoints = {}
 
-    # Initial Conditions
-    self.startingPose = []
+    # Initial Conditions (X = 0, Y = 0, Theta = 0)
+    self.startingPose = [0, 0, 0]
 
     # Current Position
-    self.currentPose = []
+    self.currentPose = [0,0,0]
 
     # Point we are tracking (length of car) (don't remember)
     self.b = .212
@@ -67,18 +67,21 @@ def __init__(self):
 
 def setTrajectoryAndRun(self, data):
     # This is the callback from the subscriber
-    # It populates the trajectoryWaypoints data structure
-    for wayPoint in data:
+    # It populates the trajectoryWaypoints data 
+    
+    # Grab the number of waypoints from the trajectory message (all X,Y, Theta, time arrays should be same length)
+    numberOfWaypoints = len(data.X)
+    for i in numberOfWaypoints:
         # This essentially gives us access to desired X, Desired Y, and desired Theta at time t
-        time = wayPoint[3]
-        pose = wayPoint[:2]
+        time = data.time[i]
+        pose = [data.X[i], data.Y[i], data.Theta[i]]
         self.trajectoryWaypoints[time] = pose
 
     runController()
 
 
 
-def runController():
+def runController(self):
     #run the error dynamics controller
 
     # while(1)
@@ -93,7 +96,6 @@ def runController():
         #round the class attribute time to feed it to the trajectoryWaypoints Data structure
         time = round(self.time)
 
-         # TODO: Numpy syntax
         x = self.currentPose[0]
         y = self.currentPose[1]
         theta = self.currentPose[2]
@@ -146,7 +148,7 @@ def runController():
         self.time = time + dt
         
 
-def limiter(V, W)
+def limiter(self, V, W)
     # This takes in the commanded V and W from the controller, and limits the values to 
     # values that the car can actually do
     # Use W to calculate psi, then limit psi

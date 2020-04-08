@@ -10,7 +10,7 @@ class CarController:
         self.KeyboardMessage = rospy.Subscriber('/CarKeyboard', Float64, self.keyboardCallback, queue_size=1)
         self.RobotMode = rospy.Subscriber('/CarMode', Float64, self.ChangeMode, queue_size=1)
         self.car = Car()
-        self.carmode = 0 #0 is for teleop 1 is for autonomous
+        self.carmode = 0 #0 is for teleop 2 is for autonomous, 1 is for test
         self.carLength = .212
         self.carWidth = .224
         serviceVandW = rospy.Service("VandW", VandWService, self.updateVandW)
@@ -22,7 +22,7 @@ class CarController:
         measuredV = 0
         measuredW = 0
         timeElapsed = 0
-        if self.carmode == 1:
+        if self.carmode == 1 or self.carmode == 2:
             # Calculate steering angle from W, thread actually moves it
             self.car.DesiredSteeringAngle = math.atan(data.W*self.carLength/data.V)
         

@@ -48,23 +48,20 @@
       <widget class="QComboBox" name="ModeCombo"/>
      </item>
      <item>
-      <widget class="QPushButton" name="SendTrajectoryBTN">
+      <widget class="QPushButton" name="SendCustomTrajectoryBTN">
        <property name="text">
-        <string>Send Trajectory</string>
+        <string>Send Custom Trajectory</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="SendSquareBTN">
+       <property name="text">
+        <string>Send Square Trajectory</string>
        </property>
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QListView" name="listView">
-    <property name="geometry">
-     <rect>
-      <x>810</x>
-      <y>330</y>
-      <width>721</width>
-      <height>751</height>
-     </rect>
-    </property>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
@@ -97,6 +94,16 @@
       <widget class="QLineEdit" name="DegreesEntry"/>
      </item>
      <item>
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Duration</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="TimeArcEntry"/>
+     </item>
+     <item>
       <widget class="QPushButton" name="AddArcBTN">
        <property name="text">
         <string>Add Arc</string>
@@ -124,6 +131,16 @@
      </item>
      <item>
       <widget class="QLineEdit" name="DistanceEntry"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Duration</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="TimeLineEntry"/>
      </item>
      <item>
       <widget class="QPushButton" name="AddLineBTN">
@@ -173,6 +190,16 @@
      </item>
     </layout>
    </widget>
+   <widget class="QListWidget" name="TrajList">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>340</y>
+      <width>751</width>
+      <height>741</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -180,7 +207,7 @@
      <x>0</x>
      <y>0</y>
      <width>1611</width>
-     <height>39</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
