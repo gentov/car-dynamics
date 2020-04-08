@@ -20,8 +20,12 @@ class CarApp(QtWidgets.QMainWindow):
 
         ## Custom Trajectory message: a list containing x,y,theta
         self.TrajectoryMessage = rospy.Publisher('/Trajectory', TrajectoryMSG, queue_size=1)
-        
-    def generateTrajectory():
+        self.Mode = "Tele-Op"
+        self.ModeCombo.addItem("Tele-Op")
+        self.ModeCombo.addItem("Test Mode")
+        self.ModeCombo.addItem("I/O Controller")
+
+    def generateTrajectory(self):
         # A button in a Qt window will have this method as its callback
         # This will publish the trajectory message, and the InputOutController will subscribe to this message type
         pass
