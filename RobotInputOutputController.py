@@ -163,10 +163,10 @@ def limiter(self, V, W)
     elif(V < -velocityLimit):
         limitedV = -velocityLimit
     psiTemp = math.atan(W*carLength/V)
-    if(psiTemp > 45):
-        psiTemp = 45
-    if(psiTemp < -45):
-        psiTemp = -45
+    if(psiTemp > math.radians(45)):
+        psiTemp = math.radians(45)
+    if(psiTemp < math.radians(-45)):
+        psiTemp = math.radians(-45)
     limitedW = math.tan(psiTemp)/carLength*V
     
     return(limitedV,limitedW)
