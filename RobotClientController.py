@@ -11,12 +11,13 @@ class CarController:
         self.RobotMode = rospy.Subscriber('/CarMode', Float64, self.ChangeMode, queue_size=1)
         self.car = Car()
         self.carmode = 0 #0 is for teleop 2 is for autonomous, 1 is for test
-        self.carLength = .212
-        self.carWidth = .224
+        self.carLength = 212
+        self.carWidth = 224
         serviceVandW = rospy.Service("VandW", VandWService, self.updateVandW)
         
     def ChangeMode(self, data):
         self.carmode = data.data
+        print("Changed Mode")
 
     def updateVandW(self, data):
         measuredV = 0
@@ -24,25 +25,32 @@ class CarController:
         timeElapsed = 0
         if self.carmode == 1 or self.carmode == 2:
             # Calculate steering angle from W, thread actually moves it
-            self.car.DesiredSteeringAngle = math.atan(data.W*self.carLength/data.V)
-        
-            if(data.V < 0):
-                self.car.setMotor(self.velocityToPWM(data.V), 1)
-            elif(data.V > 0):
-                self.car.setMotor(self.velocityToPWM(data.V), 0)
+            steerAngle = math.atan(data.Wdesired * self.carLength / data.Vdesired)
+            print(steerAngle)
+            self.car.turnToDesiredAngle(steerAngle)
+            print("Set Velocity " + str(self.velocityToPWM(data.Vdesired)))
+            if(data.Vdesired < 0):
+                self.car.setMotor(self.velocityToPWM(data.Vdesired), 1)
+                print("Backing Up")
+            elif(data.Vdesired > 0):
+                self.car.setMotor(self.velocityToPWM(data.Vdesired), 0)
+                print("Moving Forward")
+            else:
+                self.car.setMotor(0, 0)
+                print("Motor Stopped")
 
             # Set drive motor to V
-            #waits some amount of time
+            rospy.sleep(0.6) #makes sure the velocity is updated at least once
             #returns measured V and W
             measuredV = self.car.LinearVelocity
             measuredW = self.car.AngularVelocity
-            timeElapsed = 0 #add function
+            timeElapsed = 0.6 #add function
         return VandWServiceResponse(measuredV, measuredW, timeElapsed)
 
     def velocityToPWM(self, velocity):
         maxPWM = 255
         velocityToPWMRatio = maxPWM/self.car.maxSpeed
-        return velocity * velocityToPWMRatio
+        return int(velocity * velocityToPWMRatio)
     
     def keyboardCallback(self, data):
         if self.carmode == 0:
@@ -58,7 +66,6 @@ class CarController:
                 print("Pressed Left")
                 self.car.turnToDesiredAngle(-35)
 
-
             elif data.data == 3:
                 print("Pressed Right")
                 self.car.turnToDesiredAngle(35)
@@ -68,6 +75,7 @@ class CarController:
                 self.car.setMotor(0, 1)
             elif data.data == 5:
                 self.car.turnToDesiredAngle(0)
+                print("Pressed B")
             elif data.data == 6:
                 print("Velocity: ", self.car.LinearVelocity)
                 print("Ticks: ", self.car.ticks)

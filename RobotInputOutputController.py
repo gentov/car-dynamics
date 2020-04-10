@@ -148,7 +148,7 @@ def runController(self):
         self.time = time + dt
         
 
-def limiter(self, V, W)
+def limiter(self, V, W):
     # This takes in the commanded V and W from the controller, and limits the values to 
     # values that the car can actually do
     # Use W to calculate psi, then limit psi
@@ -156,7 +156,7 @@ def limiter(self, V, W)
     # Limit V to feasible value and send it
     carLength = .212
     carWidth  = .224
-
+    limitedV = V
     velocityLimit  = 100
     if(V > velocityLimit):
         limitedV = velocityLimit

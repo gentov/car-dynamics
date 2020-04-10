@@ -17,6 +17,7 @@ long MeasuredADCValue = 0;
 unsigned char drivingDirection = 0;
 unsigned char steeringDirection = 0;
 bool steeringMoving = false;
+long lastTimeSinceMotorCMD = 0;
     
 void setup() {
     pinMode(EncoderPinA, INPUT);
@@ -37,6 +38,10 @@ void setup() {
 
 void loop() {
     setSteeringAngle();
+    if((millis()-lastTimeSinceMotorCMD)>5000){
+      setMotorSpeed(0, DriveMotorPWMPin);
+    }
+      
 }
 
 
@@ -139,6 +144,7 @@ void receiveCommand(int bytes){
     // If it is a steering command
     if(msg == 1){ //Not sure if MSB and LSB first
         DesiredADCValue = (((int)(temp[1]&0b11111111))<<8) + ((int)(temp[2]&0b11111111));
+        lastTimeSinceMotorCMD = millis();
     }
     // otherwise, if it is a motorspeed command
     else if(msg == 2){
@@ -146,6 +152,7 @@ void receiveCommand(int bytes){
         setMotorDirection(drivingDirection, DriveMotorDirectionPin);
         MotorPWM = temp[1];
         setMotorSpeed(MotorPWM, DriveMotorPWMPin);
+        lastTimeSinceMotorCMD = millis();
 
     }
     

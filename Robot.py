@@ -8,7 +8,7 @@ class Car():
 
         self.bus = smbus.SMBus(1)
         self.addressUno = 0x04
-        self.maxSpeed = 100 # mm/s (needs updating)
+        self.maxSpeed = 50 # mm/s (needs updating)
         self.DesiredSteeringAngle = 0
         self.AngleTolerance = 0.1
         self.steeringSpeed = 12
@@ -17,8 +17,8 @@ class Car():
         self.steeringMoving = False
        
         self.steeringAngle = 0
-        self.carLength = .212
-        self.carWidth = .224
+        self.carLength = 212
+        self.carWidth = 224
         self.ticks = 0
         self.LastEncoderTicks = 0
         self.TimeOfLastCheck = time.time()
@@ -26,7 +26,7 @@ class Car():
         self.LinearVelocity = 0
         self.AngularVelocity = 0
         self.VelCheckFrequency = 2 #10 times per second
-        self.TicksToMM = 1.180 #needs updating
+        self.TicksToMM = 5.12 #needs updating
         self.busBusy = False
         self.CalcVelocityThread.start()
 
@@ -58,8 +58,10 @@ class Car():
         #print(ADC)
         return ADC
 
+
     def turnToDesiredAngle(self, angle):
-        ADC = int(self.angleToADC(angle))
+        ADC = int(self.angleToADC(math.degrees(angle)))
+        print("ADC Value "+str(ADC))
         temp = ADC.to_bytes(2, "big", signed=False)
         msg = [int(temp[0]), int(temp[1])]
         self.sendMessage(1, msg)
@@ -102,9 +104,7 @@ class Car():
             bytes.append(data6)
             ticks = int.from_bytes(bytes, "big")
             self.ticks = ticks
-            self.steeringAngle = self.adcToAngle(ADCValue)
-            print(ticks)
-            print(self.steeringAngle)
+            self.steeringAngle = math.radians(self.adcToAngle(ADCValue))
 
             self.busBusy = False
         

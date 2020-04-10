@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1611</width>
+    <width>1800</width>
     <height>1200</height>
    </rect>
   </property>
@@ -68,7 +68,7 @@
      <rect>
       <x>20</x>
       <y>340</y>
-      <width>751</width>
+      <width>981</width>
       <height>80</height>
      </rect>
     </property>
@@ -117,7 +117,7 @@
      <rect>
       <x>20</x>
       <y>460</y>
-      <width>751</width>
+      <width>981</width>
       <height>80</height>
      </rect>
     </property>
@@ -156,7 +156,7 @@
      <rect>
       <x>20</x>
       <y>610</y>
-      <width>751</width>
+      <width>981</width>
       <height>80</height>
      </rect>
     </property>
@@ -193,11 +193,89 @@
    <widget class="QListWidget" name="TrajList">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>340</y>
+      <x>1030</x>
+      <y>360</y>
       <width>751</width>
       <height>741</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ForwardBTN">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>760</y>
+      <width>170</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Forward</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BackwardBTN">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>830</y>
+      <width>170</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Backward</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="RightBTN">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>760</y>
+      <width>170</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Right</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="LeftBTN">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>760</y>
+      <width>170</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Left</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BrakeBTN">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>900</y>
+      <width>170</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Brake</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="StraightBTN">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>960</y>
+      <width>170</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Straight</string>
     </property>
    </widget>
   </widget>
@@ -206,8 +284,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1611</width>
-     <height>21</height>
+     <width>1800</width>
+     <height>39</height>
     </rect>
    </property>
   </widget>

@@ -36,9 +36,28 @@ class CarApp(QtWidgets.QMainWindow):
         self.AddLineBTN.clicked.connect(self.addLineCallback)
         self.SendSquareBTN.clicked.connect(self.generateSquareTrajectory)
         self.SendCustomTrajectoryBTN.clicked.connect(self.generateCustomTrajectory)
+        self.ForwardBTN.clicked.connect(self.forwardCallback)
+        self.BackwardBTN.clicked.connect(self.backwardCallback)
+        self.LeftBTN.clicked.connect(self.leftCallback)
+        self.RightBTN.clicked.connect(self.rightCallback)
+        self.BrakeBTN.clicked.connect(self.brakeCallback)
+        self.StraightBTN.clicked.connect(self.straightCallback)
 
         self.TrajectoryDesignerList = []
         self.TrajListIndex = 0
+
+        self.ForwardBTN.setEnabled(True)
+        self.BackwardBTN.setEnabled(True)
+        self.LeftBTN.setEnabled(True)
+        self.RightBTN.setEnabled(True)
+        self.BrakeBTN.setEnabled(True)
+        self.StraightBTN.setEnabled(True)
+        self.SendVandWBTN.setEnabled(False)
+        self.AddArcBTN.setEnabled(False)
+        self.AddLineBTN.setEnabled(False)
+        self.SendSquareBTN.setEnabled(False)
+        self.SendCustomTrajectoryBTN.setEnabled(False)
+
 
     def generateSquareTrajectory(self):
         # We can start by making a square with N*4 waypoints, where N is the number of 
@@ -194,55 +213,102 @@ class CarApp(QtWidgets.QMainWindow):
         self.Trajectory.time = time
 
         self.TrajectoryMessagePublisher.publish(self.Trajectory)
-        
 
-    #overriding keyPressEvent from Qt library
-    def keyPressEvent(self, event):
+    def forwardCallback(self):
         if self.Mode == "Tele-Op":
-            if event.key() == Qt.Key_Up:
-                print("Pressed Up")
-                self.KeyboardMessage.publish(0)
-            elif event.key() == Qt.Key_Down:
-                print("Pressed Down")
-                self.KeyboardMessage.publish(1)
-            elif event.key() == Qt.Key_Left:
-                print("Pressed Left")
-                self.KeyboardMessage.publish(2)
-            elif event.key() == Qt.Key_Right:
-                print("Pressed Right")
-                self.KeyboardMessage.publish(3)
-            elif event.key() == Qt.Key_Space:
-                self.KeyboardMessage.publish(4)
-            elif event.key() == Qt.Key_B:
-                self.KeyboardMessage.publish(5)
-            elif event.key() == Qt.Key_S:
-                self.KeyboardMessage.publish(6)
+            print("Pressed Up")
+            self.KeyboardMessage.publish(0)
+    def backwardCallback(self):
+        if self.Mode == "Tele-Op":
+            print("Pressed Down")
+            self.KeyboardMessage.publish(1)
+    def leftCallback(self):
+        if self.Mode == "Tele-Op":
+            print("Pressed Left")
+            self.KeyboardMessage.publish(2)
+
+    def rightCallback(self):
+        if self.Mode == "Tele-Op":
+            print("Pressed Right")
+            self.KeyboardMessage.publish(3)
+
+    def brakeCallback(self):
+        if self.Mode == "Tele-Op":
+            print("Brake")
+            self.KeyboardMessage.publish(4)
+    def straightCallback(self):
+        if self.Mode == "Tele-Op":
+            print("Straight")
+            self.KeyboardMessage.publish(5)
+
+
     def ChangeMode(self):
-        self.Mode = self.ModeCombo.text()
+        self.Mode = self.ModeCombo.currentText()
         if(self.Mode == "Tele-Op"):
             self.RobotMode.publish(0)
+            self.ForwardBTN.setEnabled(True)
+            self.BackwardBTN.setEnabled(True)
+            self.LeftBTN.setEnabled(True)
+            self.RightBTN.setEnabled(True)
+            self.BrakeBTN.setEnabled(True)
+            self.StraightBTN.setEnabled(True)
+            self.SendVandWBTN.setEnabled(False)
+            self.AddArcBTN.setEnabled(False)
+            self.AddLineBTN.setEnabled(False)
+            self.SendSquareBTN.setEnabled(False)
+            self.SendCustomTrajectoryBTN.setEnabled(False)
         elif(self.Mode == "Test Mode"):
             self.RobotMode.publish(1)
+            self.ForwardBTN.setEnabled(False)
+            self.BackwardBTN.setEnabled(False)
+            self.LeftBTN.setEnabled(False)
+            self.RightBTN.setEnabled(False)
+            self.BrakeBTN.setEnabled(False)
+            self.StraightBTN.setEnabled(False)
+            self.SendVandWBTN.setEnabled(True)
+            self.AddArcBTN.setEnabled(False)
+            self.AddLineBTN.setEnabled(False)
+            self.SendSquareBTN.setEnabled(False)
+            self.SendCustomTrajectoryBTN.setEnabled(False)
         elif(self.Mode =="I/O Controller"):
             self.RobotMode.publish(2)
+            self.ForwardBTN.setEnabled(False)
+            self.BackwardBTN.setEnabled(False)
+            self.LeftBTN.setEnabled(False)
+            self.RightBTN.setEnabled(False)
+            self.BrakeBTN.setEnabled(False)
+            self.StraightBTN.setEnabled(False)
+            self.SendVandWBTN.setEnabled(False)
+            self.AddArcBTN.setEnabled(True)
+            self.AddLineBTN.setEnabled(True)
+            self.SendSquareBTN.setEnabled(True)
+            self.SendCustomTrajectoryBTN.setEnabled(True)
 
     def SendWandVCallback(self):
         if self.Mode =="Test Mode":
             try:
-                V = int(self.SetV.text())
+                V = float(self.SetV.text())
             except:
                 V = 0
                 self.SetV.setText("0")
+                print("Couldnt Parse V")
             try:
-                W = int(self.SetW.text())
+                W = float(self.SetW.text())
+
             except:
                 W =0
                 self.SetW.setText("0")
+                print("Couldnt Parse W")
             vals = self.limiter(V, W)
-            self.SetV.setText(vals[0].toString())
-            self.SetW.setText(vals[1].toString())
-            sendVandW = rospy.ServiceProxy('VandW',VandWService)
-            response = sendVandW(vals[0], vals[1])
+            print(vals)
+            self.SetV.setText(str(vals[0]))
+            self.SetW.setText(str(vals[1]))
+            if V==0 or W==0:
+                print("Cant send no speed")
+            else:
+                sendVandW = rospy.ServiceProxy('VandW',VandWService)
+                response = sendVandW(vals[0], vals[1])
+                print(response)
 
     def limiter(self, V, W):
         # This takes in the commanded V and W from the controller, and limits the values to
@@ -250,19 +316,19 @@ class CarApp(QtWidgets.QMainWindow):
         # Use W to calculate psi, then limit psi
         # Use new psi to calculate W
         # Limit V to feasible value and send it
-        carLength = .212
-        carWidth  = .224
-        limitedV = 0
-        velocityLimit  = 100
+        carLength = 212
+        carWidth  = 224
+        limitedV = V
+        velocityLimit  = 50 #2 inches persecond
         if(V > velocityLimit):
             limitedV = velocityLimit
         elif(V < -velocityLimit):
             limitedV = -velocityLimit
         psiTemp = math.atan(W*carLength/V)
-        if(psiTemp > math.radians(45)):
-            psiTemp = math.radians(45)
-        if(psiTemp < math.radians(-45)):
-            psiTemp = math.radians(-45)
+        if(psiTemp > math.radians(35)):
+            psiTemp = math.radians(35)
+        if(psiTemp < math.radians(-35)):
+            psiTemp = math.radians(-35)
         limitedW = math.tan(psiTemp)/carLength*V
     
         return(limitedV,limitedW)
