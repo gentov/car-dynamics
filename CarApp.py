@@ -72,7 +72,7 @@ class CarApp(QtWidgets.QMainWindow):
         theta = [0]
         side = 0
         # This is essentially the increment as we move along the square 
-        speed = 5
+        speed = 50
         timeStep = 1
 
         previousX = 0
@@ -125,7 +125,6 @@ class CarApp(QtWidgets.QMainWindow):
         # This will publish the trajectory message, and the InputOutController will subscribe to this message type
 
     def generateCustomTrajectory(self):
-        print("Here")
         # Some useful Car Parameters:
         carWidth_mm = 224
         carLength_mm = 212
@@ -135,8 +134,8 @@ class CarApp(QtWidgets.QMainWindow):
         y = [0]
         time = [0]
         theta = [0]
-        #@TODO: Change this time step. It just looks nicer when the resolution is finer
-        timeStep = .05
+
+        timeStep = 1 # we round to one in the controller
         #Speed to increment 
         speed = 0
         previousX = 0
@@ -324,12 +323,12 @@ class CarApp(QtWidgets.QMainWindow):
             limitedV = velocityLimit
         elif(V < -velocityLimit):
             limitedV = -velocityLimit
-        psiTemp = math.atan(W*carLength/V)
+        psiTemp = math.atan(W*carLength/limitedV)
         if(psiTemp > math.radians(35)):
             psiTemp = math.radians(35)
         if(psiTemp < math.radians(-35)):
             psiTemp = math.radians(-35)
-        limitedW = math.tan(psiTemp)/carLength*V
+        limitedW = math.tan(psiTemp)/carLength*limitedV
     
         return(limitedV,limitedW)
 

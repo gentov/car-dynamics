@@ -2,6 +2,7 @@
 import rospy
 from std_msgs.msg import Float64
 from Robot import *
+
 from carpackage.srv import VandWService, VandWServiceResponse
 import math
 
@@ -17,6 +18,13 @@ class CarController:
         
     def ChangeMode(self, data):
         self.carmode = data.data
+        if self.carmode == 1 or self.carmode ==2:
+            if self.car.CalcVelocityThread.is_alive()==False:
+                self.car.runCalcThread = True
+                self.car.CalcVelocityThread.start()
+        else:
+            if self.car.CalcVelocityThread.is_alive():
+                self.car.runCalcThread = False
         print("Changed Mode")
 
     def updateVandW(self, data):
@@ -25,7 +33,10 @@ class CarController:
         timeElapsed = 0
         if self.carmode == 1 or self.carmode == 2:
             # Calculate steering angle from W, thread actually moves it
-            steerAngle = math.atan(data.Wdesired * self.carLength / data.Vdesired)
+            if data.Vdesired ==0:
+                steerAngle = 0#straighten if no speed
+            else:
+                steerAngle = math.atan(data.Wdesired * self.carLength / data.Vdesired)
             print(steerAngle)
             self.car.turnToDesiredAngle(steerAngle)
             print("Set Velocity " + str(self.velocityToPWM(data.Vdesired)))

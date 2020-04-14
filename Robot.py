@@ -28,11 +28,11 @@ class Car():
         self.VelCheckFrequency = 2 #10 times per second
         self.TicksToMM = 5.12 #needs updating
         self.busBusy = False
-        self.CalcVelocityThread.start()
+        self.runCalcThread = False
 
         
     def updateStates(self):
-        while(True):
+        while(self.runCalcThread):
             if self.TimeOfNextCheck<time.time():
 
                 self.retrieveMessage()
@@ -44,6 +44,8 @@ class Car():
                 self.TimeOfLastCheck = currentTime
                 self.TimeOfNextCheck = currentTime+1/self.VelCheckFrequency
                 self.AngularVelocity = self.getAngularVelocity()
+                print(self.ticks)
+        self.CalcVelocityThread = threading.Thread(target=self.updateStates)
 
 
     def adcToAngle(self, ADC):
