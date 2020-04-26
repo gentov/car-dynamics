@@ -42,6 +42,7 @@ class InputOutputController:
         self.VandWService = rospy.wait_for_service("VandW")
         print("Started")
     def setTrajectoryAndRun(self, data):
+        self.trajectoryWaypoints = {}
         # This is the callback from the subscriber
         # It populates the trajectoryWaypoints data
         print("Recieved Trajectory")
@@ -55,6 +56,7 @@ class InputOutputController:
         self.time = timer.time()
         self.LastTime = timer.time()
         self.StartTime = timer.time()
+        print(self.trajectoryWaypoints)
         self.runController()
 
 
@@ -73,13 +75,14 @@ class InputOutputController:
         while(1):
 
             #round the class attribute time to feed it to the trajectoryWaypoints Data structure
-            time = round(self.LastTime - self.StartTime)
-
+            time = float(round((self.LastTime - self.StartTime)*2))/2
+            #print("time "+str((self.LastTime - self.StartTime)))
             x = self.currentPose[0]
             y = self.currentPose[1]
             theta = self.currentPose[2]
             try:
                 desiredPose = self.trajectoryWaypoints[time]
+
             except:
                 print("Time doesnt exist, End of trajectory")
                 sendVandW = rospy.ServiceProxy('VandW', VandWService)
@@ -123,12 +126,17 @@ class InputOutputController:
             self.V = vals[0]
             self.W = vals[1]
             # Send V and W to the robot
+            #responseTimeStart =timer.time()
             sendVandW = rospy.ServiceProxy('VandW',VandWService)
-            response = sendVandW(self.V, self.W)
 
+            response = sendVandW(self.V, self.W)
+            #responseTimeEnd = timer.time()
+            #print("Time to get response: " + str(responseTimeEnd - responseTimeStart))
             ActualV = response.Vactual
             ActualW = round(response.Wactual, 2)#The controller updates too slowly to adjust for tiny errors in W
             dt = timer.time()-self.LastTime
+            print("Desired State")
+            print(str(self.V) + " mm/s " + str(self.W) + " rad/s")
             print("Robot State")
             print(str(ActualV)+" mm/s "+ str(ActualW)+" rad/s")
             #Update the currentPose
@@ -139,6 +147,8 @@ class InputOutputController:
             self.LastTime = timer.time()
             print("Current Pose")
             print(self.currentPose)
+            print("Desired Pose")
+            print(desiredPose)
 
 
     def limiter(self, V, W):
@@ -154,7 +164,7 @@ class InputOutputController:
             carLength = 212
             carWidth  = 224
             limitedV = V
-            velocityLimit  = 50
+            velocityLimit  = 100
             if(V > velocityLimit):
                 limitedV = velocityLimit
             elif(V < -velocityLimit):

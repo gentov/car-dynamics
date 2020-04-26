@@ -33,35 +33,36 @@ class CarController:
         timeElapsed = 0
         if self.carmode == 1 or self.carmode == 2:
             # Calculate steering angle from W, thread actually moves it
+            self.car.updateStates()
             if data.Vdesired ==0:
                 steerAngle = 0#straighten if no speed
             else:
                 steerAngle = math.atan(data.Wdesired * self.carLength / data.Vdesired)
-            print(steerAngle)
+            #print(steerAngle)
             self.car.turnToDesiredAngle(steerAngle)
-            print("Set Velocity " + str(self.velocityToPWM(data.Vdesired)))
+            #print("Set Velocity " + str(self.velocityToPWM(data.Vdesired)))
             if(data.Vdesired < 0):
                 self.car.setMotor(self.velocityToPWM(data.Vdesired), 1)
-                print("Backing Up")
+                #print("Backing Up")
             elif(data.Vdesired > 0):
                 self.car.setMotor(self.velocityToPWM(data.Vdesired), 0)
-                print("Moving Forward")
+                #print("Moving Forward")
             else:
                 self.car.setMotor(0, 0)
-                print("Motor Stopped")
+                #print("Motor Stopped")
 
             # Set drive motor to V
-            rospy.sleep(0.6) #makes sure the velocity is updated at least once
+            #rospy.sleep(0.3) #makes sure the velocity is updated at least once
             #returns measured V and W
             measuredV = self.car.LinearVelocity
             measuredW = self.car.AngularVelocity
-            timeElapsed = 0.6 #add function
+            timeElapsed = 0.3 #add function
         return VandWServiceResponse(measuredV, measuredW, timeElapsed)
 
     def velocityToPWM(self, velocity):
         maxPWM = 255
         velocityToPWMRatio = maxPWM/self.car.maxSpeed
-        return int(velocity * velocityToPWMRatio)
+        return abs(int(velocity * velocityToPWMRatio))
     
     def keyboardCallback(self, data):
         if self.carmode == 0:
@@ -75,11 +76,11 @@ class CarController:
 
             elif data.data == 2:
                 print("Pressed Left")
-                self.car.turnToDesiredAngle(-35)
+                self.car.turnToDesiredAngle(-0.6)
 
             elif data.data == 3:
                 print("Pressed Right")
-                self.car.turnToDesiredAngle(35)
+                self.car.turnToDesiredAngle(0.6)
 
             elif data.data == 4:
                 print("Stop")

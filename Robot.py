@@ -8,11 +8,11 @@ class Car():
 
         self.bus = smbus.SMBus(1)
         self.addressUno = 0x04
-        self.maxSpeed = 50 # mm/s (needs updating)
+        self.maxSpeed = 100 # mm/s (needs updating)
         self.DesiredSteeringAngle = 0
         self.AngleTolerance = 0.1
         self.steeringSpeed = 12
-        self.CalcVelocityThread = threading.Thread(target = self.updateStates)
+        #self.CalcVelocityThread = threading.Thread(target = self.updateStates)
         self.steeringDirection = 0
         self.steeringMoving = False
        
@@ -25,27 +25,27 @@ class Car():
         self.TimeOfNextCheck = 0
         self.LinearVelocity = 0
         self.AngularVelocity = 0
-        self.VelCheckFrequency = 2 #10 times per second
-        self.TicksToMM = 5.12 #needs updating
+        self.VelCheckFrequency = 3 #10 times per second
+        self.TicksToMM = 2.56 #needs updating
         self.busBusy = False
         self.runCalcThread = False
 
         
     def updateStates(self):
-        while(self.runCalcThread):
-            if self.TimeOfNextCheck<time.time():
+        #while(self.runCalcThread):
+            #if self.TimeOfNextCheck<time.time():
 
-                self.retrieveMessage()
-                changeInTicks = self.ticks-self.LastEncoderTicks
-                currentTime = time.time()
-                changeInTime = currentTime-self.TimeOfLastCheck
-                self.LinearVelocity = changeInTicks/changeInTime/self.TicksToMM
-                self.LastEncoderTicks = self.ticks
-                self.TimeOfLastCheck = currentTime
-                self.TimeOfNextCheck = currentTime+1/self.VelCheckFrequency
-                self.AngularVelocity = self.getAngularVelocity()
-                print(self.ticks)
-        self.CalcVelocityThread = threading.Thread(target=self.updateStates)
+        self.retrieveMessage()
+        changeInTicks = self.ticks-self.LastEncoderTicks
+        currentTime = time.time()
+        changeInTime = currentTime-self.TimeOfLastCheck
+        self.LinearVelocity = changeInTicks/changeInTime/self.TicksToMM
+        self.LastEncoderTicks = self.ticks
+        self.TimeOfLastCheck = currentTime
+        self.TimeOfNextCheck = currentTime+1/self.VelCheckFrequency
+        self.AngularVelocity = self.getAngularVelocity()
+        print(self.ticks)
+        #self.CalcVelocityThread = threading.Thread(target=self.updateStates)
 
 
     def adcToAngle(self, ADC):
@@ -79,8 +79,8 @@ class Car():
         return self.AngularVelocity
 
     def sendMessage(self, cmd, msg):
-        while(self.busBusy==True):
-            pass
+        #while(self.busBusy==True):
+         #   pass
         self.bus.write_i2c_block_data(self.addressUno, cmd, msg)
 
     def retrieveMessage(self):
@@ -92,14 +92,14 @@ class Car():
             data2 = self.bus.read_byte(self.addressUno)
             bytes.append(data2)
             ADCValue = int.from_bytes(bytes, "big")
-            time.sleep(0.05)
+            time.sleep(0.02)
             ## Convert the state to a V and an W based on ticks and steering angle
             bytes = []
             data3 = self.bus.read_byte(self.addressUno)
             bytes.append(data3)
             data4 = self.bus.read_byte(self.addressUno)
             bytes.append(data4)
-            time.sleep(0.05)
+            time.sleep(0.02)
             data5 = self.bus.read_byte(self.addressUno)
             bytes.append(data5)
             data6 = self.bus.read_byte(self.addressUno)

@@ -72,7 +72,7 @@ class CarApp(QtWidgets.QMainWindow):
         theta = [0]
         side = 0
         # This is essentially the increment as we move along the square 
-        speed = 50
+        speed = 100
         timeStep = 1
 
         previousX = 0
@@ -135,7 +135,7 @@ class CarApp(QtWidgets.QMainWindow):
         time = [0]
         theta = [0]
 
-        timeStep = 1 # we round to one in the controller
+        timeStep = 0.5 # we round to one in the controller
         #Speed to increment 
         speed = 0
         previousX = 0
@@ -203,9 +203,9 @@ class CarApp(QtWidgets.QMainWindow):
                     time.append(time[-1] + timeStep)
         
         # print(time[-1])
-        # plt.plot(x,y)
-        # plt.show()
-        # Populate trajectory message type
+        plt.plot(x,y)
+        plt.show()
+        #Populate trajectory message type
         self.Trajectory.X = x
         self.Trajectory.Y = y
         self.Trajectory.Theta = theta
@@ -318,7 +318,7 @@ class CarApp(QtWidgets.QMainWindow):
         carLength = 212
         carWidth  = 224
         limitedV = V
-        velocityLimit  = 50 #2 inches persecond
+        velocityLimit  = 100 #4 inches persecond
         if(V > velocityLimit):
             limitedV = velocityLimit
         elif(V < -velocityLimit):
