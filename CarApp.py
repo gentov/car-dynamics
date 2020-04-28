@@ -11,7 +11,8 @@ from PyQt5.QtCore import Qt
 from carpackage.msg import TrajectoryMSG
 from carpackage.srv import VandWService, VandWServiceResponse
 from PyQt5.QtCore import QThread, pyqtSignal
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import time as timer
 
 designerFile = "/home/nick/catkin_ws/src/501Project/carpackage/src/car-dynamics/CarApp.ui"
 
@@ -305,8 +306,12 @@ class CarApp(QtWidgets.QMainWindow):
             if V==0 or W==0:
                 print("Cant send no speed")
             else:
-                sendVandW = rospy.ServiceProxy('VandW',VandWService)
-                response = sendVandW(vals[0], vals[1])
+                responseTimeStart =timer.time()
+                sendVandW = rospy.ServiceProxy('VandW', VandWService)
+
+                response = sendVandW(V, W)
+                responseTimeEnd = timer.time()
+                print("Time to get response: " + str(responseTimeEnd - responseTimeStart))
                 print(response)
 
     def limiter(self, V, W):
@@ -324,10 +329,10 @@ class CarApp(QtWidgets.QMainWindow):
         elif(V < -velocityLimit):
             limitedV = -velocityLimit
         psiTemp = math.atan(W*carLength/limitedV)
-        if(psiTemp > math.radians(35)):
-            psiTemp = math.radians(35)
-        if(psiTemp < math.radians(-35)):
-            psiTemp = math.radians(-35)
+        if(psiTemp > math.radians(20)):
+            psiTemp = math.radians(20)
+        if(psiTemp < math.radians(-20)):
+            psiTemp = math.radians(-20)
         limitedW = math.tan(psiTemp)/carLength*limitedV
     
         return(limitedV,limitedW)

@@ -18,13 +18,6 @@ class CarController:
         
     def ChangeMode(self, data):
         self.carmode = data.data
-        if self.carmode == 1 or self.carmode ==2:
-            if self.car.CalcVelocityThread.is_alive()==False:
-                self.car.runCalcThread = True
-                self.car.CalcVelocityThread.start()
-        else:
-            if self.car.CalcVelocityThread.is_alive():
-                self.car.runCalcThread = False
         print("Changed Mode")
 
     def updateVandW(self, data):
@@ -76,11 +69,11 @@ class CarController:
 
             elif data.data == 2:
                 print("Pressed Left")
-                self.car.turnToDesiredAngle(-0.6)
+                self.car.turnToDesiredAngle(-0.31)
 
             elif data.data == 3:
                 print("Pressed Right")
-                self.car.turnToDesiredAngle(0.6)
+                self.car.turnToDesiredAngle(0.31)
 
             elif data.data == 4:
                 print("Stop")

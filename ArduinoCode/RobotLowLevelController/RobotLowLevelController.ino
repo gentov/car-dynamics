@@ -1,4 +1,5 @@
 #include <HardWire.h>
+
 //#define debug
 // Global Variables
 unsigned char EncoderPinA = 2;
@@ -28,20 +29,62 @@ void setup() {
     pinMode(SteeringMotorPWMPin, OUTPUT);
     //Serial.begin(115200);
     // Address of arduino
-    Wire.begin(4);
+    //Wire.begin(4);
     // callback
-    Wire.onReceive(receiveCommand);
-    Wire.onRequest(receiveRequest);
+    //Wire.onReceive(receiveCommand);
+    //Wire.onRequest(receiveRequest);
     attachInterrupt(digitalPinToInterrupt(EncoderPinA), count_ticks, RISING);
+
+    Serial.begin(115200);
+    
     
 }
 
 void loop() {
     setSteeringAngle();
+    runSerialComm();
     if((millis()-lastTimeSinceMotorCMD)>5000){
       setMotorSpeed(0, DriveMotorPWMPin);
-    }
       
+    }
+    
+      
+}
+
+void runSerialComm(){
+  String command;
+  while(Serial.available()){
+    delay(3);
+    if(Serial.available()>0){
+        char c = Serial.read();
+        command += c;
+      }
+  } 
+  
+  int com;
+  if(command.length() > 0){
+    com = command.substring(0, 1).toInt();
+    if(com==0){
+      //Serial.println("Data");
+      Serial.println(MeasuredADCValue);
+      Serial.println(ticks);
+    }
+    else if(com==1){
+      //Serial.println("Recieved Turn CMD");
+      DesiredADCValue = command.substring(1, 5).toInt();
+      
+    }
+    else if(com == 2){
+      //Serial.println("Recieved Drive CMD");
+      int motDir = command.substring(1, 2).toInt();
+      int motorSpeed = command.substring(2, 5).toInt();
+      //Serial.println(motDir);
+      //Serial.println(motorSpeed);
+      setMotorDirection(motDir, DriveMotorDirectionPin);
+      setMotorSpeed(motorSpeed, DriveMotorPWMPin);
+      lastTimeSinceMotorCMD = millis();
+    }
+  } 
 }
 
 

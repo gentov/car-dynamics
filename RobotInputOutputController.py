@@ -31,8 +31,8 @@ class InputOutputController:
         self.StartTime = timer.time()
 
         # The two gains
-        self.K1 = 8
-        self.K2 = 8
+        self.K1 = 2
+        self.K2 = 2
 
         # The control inputs
         self.V = None
@@ -140,10 +140,10 @@ class InputOutputController:
             print("Robot State")
             print(str(ActualV)+" mm/s "+ str(ActualW)+" rad/s")
             #Update the currentPose
-
-            self.currentPose[0] = x + ActualV*math.cos(theta)*dt
-            self.currentPose[1] = y + ActualV*math.sin(theta)*dt
             self.currentPose[2] = theta + ActualW * dt
+            self.currentPose[0] = x + ActualV*math.cos( self.currentPose[2])*dt
+            self.currentPose[1] = y + ActualV*math.sin( self.currentPose[2])*dt
+
             self.LastTime = timer.time()
             print("Current Pose")
             print(self.currentPose)
@@ -173,12 +173,12 @@ class InputOutputController:
            # print("Psi Temp")
            # print(math.degrees(psiTemp))
 
-            if(psiTemp > math.radians(35)):
-                psiTemp = math.radians(35)
+            if(psiTemp > math.radians(20)):
+                psiTemp = math.radians(20)
              #   print("Too Large")
-            if(psiTemp < math.radians(-35)):
+            if(psiTemp < math.radians(-20)):
 
-                psiTemp = math.radians(-35)
+                psiTemp = math.radians(-20)
             #    print("Too Small")
             limitedW = float(math.tan(psiTemp)/carLength*limitedV)
 
