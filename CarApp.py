@@ -136,7 +136,7 @@ class CarApp(QtWidgets.QMainWindow):
         time = [0]
         theta = [0]
 
-        timeStep = 0.5 # we round to one in the controller
+        timeStep = 0.1 # we round to one in the controller
         #Speed to increment 
         speed = 0
         previousX = 0
@@ -165,7 +165,7 @@ class CarApp(QtWidgets.QMainWindow):
                     #Update where we are right now
                     previousX = x[-1]
                     previousY = y[-1]
-                    time.append(time[-1] + timeStep)
+                    time.append(round(time[-1] + timeStep, 1))
             else:
                 # Calculate speed based on degrees and radius (arclength) and time
                 radius = trajectory[1]
@@ -201,7 +201,7 @@ class CarApp(QtWidgets.QMainWindow):
                     #Update where we are right now
                     previousX = x[-1]
                     previousY = y[-1]
-                    time.append(time[-1] + timeStep)
+                    time.append(round(time[-1] + timeStep, 1))
         
         # print(time[-1])
         plt.plot(x,y)
@@ -303,16 +303,14 @@ class CarApp(QtWidgets.QMainWindow):
             print(vals)
             self.SetV.setText(str(vals[0]))
             self.SetW.setText(str(vals[1]))
-            if V==0 or W==0:
-                print("Cant send no speed")
-            else:
-                responseTimeStart =timer.time()
-                sendVandW = rospy.ServiceProxy('VandW', VandWService)
 
-                response = sendVandW(V, W)
-                responseTimeEnd = timer.time()
-                print("Time to get response: " + str(responseTimeEnd - responseTimeStart))
-                print(response)
+            responseTimeStart =timer.time()
+            sendVandW = rospy.ServiceProxy('VandW', VandWService)
+
+            response = sendVandW(V, W)
+            responseTimeEnd = timer.time()
+            print("Time to get response: " + str(responseTimeEnd - responseTimeStart))
+            print(response)
 
     def limiter(self, V, W):
         # This takes in the commanded V and W from the controller, and limits the values to
@@ -329,10 +327,10 @@ class CarApp(QtWidgets.QMainWindow):
         elif(V < -velocityLimit):
             limitedV = -velocityLimit
         psiTemp = math.atan(W*carLength/limitedV)
-        if(psiTemp > math.radians(20)):
-            psiTemp = math.radians(20)
-        if(psiTemp < math.radians(-20)):
-            psiTemp = math.radians(-20)
+        if(psiTemp > math.radians(25)):
+            psiTemp = math.radians(25)
+        if(psiTemp < math.radians(-25)):
+            psiTemp = math.radians(-25)
         limitedW = math.tan(psiTemp)/carLength*limitedV
     
         return(limitedV,limitedW)

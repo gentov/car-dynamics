@@ -45,19 +45,19 @@ class Car():
         self.TimeOfLastCheck = currentTime
         self.TimeOfNextCheck = currentTime+1/self.VelCheckFrequency
         self.AngularVelocity = self.getAngularVelocity()
-        print(self.ticks)
+        #print(self.ticks)
         #self.CalcVelocityThread = threading.Thread(target=self.updateStates)
 
 
     def adcToAngle(self, ADC):
         #takes the adc value and converts it into an angle value
-        angle = (ADC/21.557) - 23.7
+        angle = (ADC/18.618) - 27.5
        # print(angle)
         return angle
     
     def angleToADC(self, angle):
         #takes and angle value and converts it into an ADC
-        ADC = (21.557 * (angle + 23.7))
+        ADC = (18.618 * (angle + 27.5))
         #print(ADC)
         return ADC
 
@@ -125,8 +125,13 @@ class Car():
 
     def retrieveMessageSerial(self):
         self.ser.write(bytes("0", 'ascii'))
-        adcVal = int(self.ser.readline().decode(encoding = "utf-8"))
-        ticks = int(self.ser.readline().decode(encoding = "utf-8"))
+        try:
+            adcVal = int(self.ser.readline().decode(encoding = "utf-8"))
+            ticks = int(self.ser.readline().decode(encoding = "utf-8"))
+        except:
+            print("Error Reading Serial")
+            adcVal = 512
+            ticks = 1000000
         self.steeringAngle = math.radians(self.adcToAngle(adcVal))
         self.ticks = ticks
 

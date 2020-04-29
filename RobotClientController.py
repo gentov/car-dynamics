@@ -69,11 +69,11 @@ class CarController:
 
             elif data.data == 2:
                 print("Pressed Left")
-                self.car.turnToDesiredAngle(-0.31)
+                self.car.turnToDesiredAngle(-0.43)
 
             elif data.data == 3:
                 print("Pressed Right")
-                self.car.turnToDesiredAngle(0.31)
+                self.car.turnToDesiredAngle(0.43)
 
             elif data.data == 4:
                 print("Stop")

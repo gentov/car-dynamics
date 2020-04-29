@@ -75,7 +75,8 @@ class InputOutputController:
         while(1):
 
             #round the class attribute time to feed it to the trajectoryWaypoints Data structure
-            time = float(round((self.LastTime - self.StartTime)*2))/2
+            time = round(self.LastTime - self.StartTime, 1)
+            print("time" + str(time))
             #print("time "+str((self.LastTime - self.StartTime)))
             x = self.currentPose[0]
             y = self.currentPose[1]
@@ -87,6 +88,23 @@ class InputOutputController:
                 print("Time doesnt exist, End of trajectory")
                 sendVandW = rospy.ServiceProxy('VandW', VandWService)
                 response = sendVandW(0, 0) # stops robot
+                ActualV = response.Vactual
+                ActualW = round(response.Wactual, 2)  # The controller updates too slowly to adjust for tiny errors in W
+                dt = timer.time() - self.LastTime
+                print("Desired State")
+                print(str(self.V) + " mm/s " + str(self.W) + " rad/s")
+                print("Robot State")
+                print(str(ActualV) + " mm/s " + str(ActualW) + " rad/s")
+                # Update the currentPose
+                self.currentPose[2] = theta + ActualW * dt
+                self.currentPose[0] = x + ActualV * math.cos(self.currentPose[2]) * dt
+                self.currentPose[1] = y + ActualV * math.sin(self.currentPose[2]) * dt
+
+                self.LastTime = timer.time()
+                print("Current Pose")
+                print(self.currentPose)
+                print("Desired Pose")
+                print(desiredPose)
                 break
 
 
@@ -135,6 +153,7 @@ class InputOutputController:
             ActualV = response.Vactual
             ActualW = round(response.Wactual, 2)#The controller updates too slowly to adjust for tiny errors in W
             dt = timer.time()-self.LastTime
+            self.LastTime = timer.time()
             print("Desired State")
             print(str(self.V) + " mm/s " + str(self.W) + " rad/s")
             print("Robot State")
@@ -144,7 +163,7 @@ class InputOutputController:
             self.currentPose[0] = x + ActualV*math.cos( self.currentPose[2])*dt
             self.currentPose[1] = y + ActualV*math.sin( self.currentPose[2])*dt
 
-            self.LastTime = timer.time()
+
             print("Current Pose")
             print(self.currentPose)
             print("Desired Pose")
@@ -173,12 +192,12 @@ class InputOutputController:
            # print("Psi Temp")
            # print(math.degrees(psiTemp))
 
-            if(psiTemp > math.radians(20)):
-                psiTemp = math.radians(20)
+            if(psiTemp > math.radians(25)):
+                psiTemp = math.radians(25)
              #   print("Too Large")
-            if(psiTemp < math.radians(-20)):
+            if(psiTemp < math.radians(-25)):
 
-                psiTemp = math.radians(-20)
+                psiTemp = math.radians(-25)
             #    print("Too Small")
             limitedW = float(math.tan(psiTemp)/carLength*limitedV)
 
